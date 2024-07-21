@@ -3,6 +3,8 @@ package edu.icet.crm.controller;
 import edu.icet.crm.model.Customer;
 import edu.icet.crm.model.SuccessResponse;
 import edu.icet.crm.service.CustomerService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,13 @@ public class CustomerController {
 
     //local scope
     @GetMapping("/get/{name}")
-    public ResponseEntity<SuccessResponse> retrieveCustomerByName(@PathVariable String name){
+    public ResponseEntity<SuccessResponse> retrieveCustomerByName(@PathVariable String name, HttpServletRequest request){
+
+        //Access the custom headers and default headers from a network request
+        String header = request.getHeader("user-id");
+        String host = request.getHeader("HOST");
+        String incomingIpAddress = request.getHeader("Origin");
+
         Optional<Customer> optionalCustomer = customerService.retrieveCustomerByName(name);
 
         if (!optionalCustomer.isPresent()){
